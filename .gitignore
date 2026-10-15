@@ -29,4 +29,5 @@ release
 
 # Docs and notes are kept local
 *.md
+!README.md
 *.txt
