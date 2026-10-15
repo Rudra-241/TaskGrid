@@ -1,0 +1,480 @@
+/* ==========================================================================
+   Desktop widgets
+   The window itself is transparent; .widget is the visible card. The body
+   padding leaves room for its shadow inside the window bounds.
+   ========================================================================== */
+
+html,
+body {
+  background: transparent;
+}
+
+body {
+  padding: 8px;
+  font-size: 13px;
+  user-select: none;
+}
+
+#root {
+  height: 100%;
+}
+
+/* In a normal browser tab, give the preview a backdrop and a fixed size. */
+[data-platform='web'] body {
+  background: var(--bg);
+  display: grid;
+  place-items: start center;
+  padding: 24px;
+}
+[data-platform='web'] #root {
+  width: 340px;
+  height: 420px;
+}
+
+.widget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-2);
+}
+
+/* ------------------------------- Header ----------------------------------- */
+.widget__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 10px 8px 16px;
+  -webkit-app-region: drag; /* lets the person move the frameless window */
+}
+
+.widget__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.widget__title h1 {
+  font-size: 15px;
+  font-weight: 700;
+}
+.widget__meta {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.widget__controls {
+  display: flex;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+  opacity: 0.55;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.widget:hover .widget__controls,
+.widget__controls:focus-within {
+  opacity: 1;
+}
+
+.widget__ctl {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  color: var(--text-muted);
+}
+.widget__ctl:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.widget__ctl--on {
+  color: var(--primary-strong);
+  background: var(--primary-soft);
+}
+
+/* -------------------------------- Body ------------------------------------ */
+.widget__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 10px 10px;
+}
+
+.widget__foot {
+  border-top: 1px solid var(--border);
+  padding: 8px 12px;
+}
+
+.widget-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.widget-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-faint);
+}
+.widget-add input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 6px 0;
+  font-size: 13px;
+}
+.widget-add input::placeholder {
+  color: var(--text-faint);
+}
+.widget-add:focus-within {
+  color: var(--primary-strong);
+}
+
+/* Undo toast, pinned to the bottom of the scroll area */
+.widget-undo {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 8px 8px 12px;
+  border-radius: var(--r-md);
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: var(--shadow-3);
+}
+/* Collapsed rather than display:none, so the live region stays in the
+   accessibility tree and its next message is announced. */
+.widget-undo:empty {
+  margin: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+.widget-undo__text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.widget-undo__btn {
+  font-weight: 700;
+  color: var(--primary);
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+}
+
+/* ------------------------------- Agenda ----------------------------------- */
+.agenda__group + .agenda__group {
+  margin-top: 8px;
+}
+
+.agenda__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.agenda__label span {
+  font-weight: 600;
+  color: var(--text-faint);
+}
+.agenda__label--overdue {
+  color: var(--accent);
+}
+
+.agenda__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: var(--r-sm);
+}
+.agenda__row:hover {
+  background: var(--surface-2);
+}
+
+.agenda__check {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--p);
+  color: transparent;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.agenda__check:hover,
+.agenda__check:focus-visible {
+  background: var(--p);
+  color: #041812;
+}
+
+.agenda__title {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 0;
+}
+.agenda__title:not(:disabled):hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+}
+.agenda__title:disabled {
+  cursor: default;
+}
+
+.agenda__meta {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.agenda__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.agenda__due {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+.agenda__due--overdue {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.agenda__due--today {
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+}
+
+/* ------------------------------- Glance ----------------------------------- */
+.glance__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 6px 12px;
+}
+
+.glance__ring {
+  flex: none;
+  width: 92px;
+  height: 92px;
+}
+.glance__ring circle {
+  fill: none;
+  stroke-width: 9;
+}
+.glance__ring-track {
+  stroke: var(--surface-2);
+}
+.glance__ring-fill {
+  stroke: var(--primary);
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset var(--dur-slow) var(--ease-out);
+}
+.glance__ring-pct {
+  text-anchor: middle;
+  font-size: 17px;
+  font-weight: 700;
+  fill: var(--text);
+}
+.glance__ring-sub {
+  text-anchor: middle;
+  font-size: 9.5px;
+  fill: var(--text-muted);
+}
+
+.glance__stats {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+}
+.glance__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 4px 10px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+}
+.glance__stat dt {
+  color: var(--text-muted);
+}
+.glance__stat dd {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.glance__stat--alert {
+  background: var(--accent-soft);
+}
+.glance__stat--alert dt,
+.glance__stat--alert dd {
+  color: var(--accent);
+}
+
+.glance__cols {
+  display: grid;
+  gap: 6px;
+  padding: 10px 6px 0;
+  border-top: 1px solid var(--border);
+}
+.glance__col {
+  display: grid;
+  grid-template-columns: 84px 1fr 22px;
+  align-items: center;
+  gap: 8px;
+}
+.glance__col-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+.glance__col-bar {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.glance__col-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width var(--dur-slow) var(--ease-out);
+}
+.glance__col-count {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------- Focus ----------------------------------- */
+.focus__list {
+  display: grid;
+  gap: 8px;
+}
+
+.focus__card {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--p);
+}
+
+.focus__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.focus__title {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-weight: 650;
+  line-height: 1.35;
+}
+.focus__title:not(:disabled):hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+}
+.focus__title:disabled {
+  cursor: default;
+}
+
+.focus__done {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--primary-strong);
+  background: var(--primary-soft);
+}
+.focus__done:hover {
+  background: var(--primary);
+  color: #041812;
+}
+
+.focus__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.focus__bar {
+  height: 5px;
+  margin-top: 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.focus__bar span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  border-radius: inherit;
+  transition: width var(--dur-mid) var(--ease-out);
+}
+
+.focus__checks {
+  margin-top: 6px;
+}
+.focus__checks label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+.focus__checks input {
+  accent-color: var(--primary);
+  width: 14px;
+  height: 14px;
+}
+.focus__checks .is-done span {
+  color: var(--text-faint);
+  text-decoration: line-through;
+}
+
+/* Honour the app's motion preference and the OS one. */
+@media (prefers-reduced-motion: reduce) {
+  .widget *,
+  .widget *::before {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "name": "hci_project",
+  "private": true,
+  "version": "0.0.0",
+  "description": "TaskGrid: an adaptive productivity workspace, with desktop widgets",
+  "author": "Rudra Saxena",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "desktop:dev": "node scripts/desktop-dev.mjs",
+    "desktop": "npm run build && npm run build:electron && electron .",
+    "dist:win": "npm run build && npm run build:electron && electron-builder --win",
+    "dist:mac": "npm run build && npm run build:electron && electron-builder --mac"
+  },
+  "dependencies": {
+    "@dnd-kit/accessibility": "^3.1.1",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@google/genai": "^2.23.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "framer-motion": "^13.1.1",
+    "nanoid": "^6.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "electron": "^44.7.2",
+    "electron-builder": "^26.15.3",
+    "oxlint": "^1.79.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.2"
+  },
+  "build": {
+    "appId": "com.taskgrid.desktop",
+    "productName": "TaskGrid",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "build/*.png",
+      "package.json",
+      "!node_modules/**"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "executableName": "taskgrid"
+    }
+  }
+}

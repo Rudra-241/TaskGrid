@@ -1,0 +1,83 @@
+.shell {
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'sidebar topbar'
+    'sidebar main';
+  background: var(--bg);
+}
+
+.shell--no-sidebar {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'topbar'
+    'main';
+}
+
+/* When the inspector is open, give it a third column. */
+.shell--inspector {
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'sidebar topbar topbar'
+    'sidebar main inspector';
+}
+.shell--inspector.shell--no-sidebar {
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'topbar topbar'
+    'main inspector';
+}
+
+.shell__main {
+  grid-area: main;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Mobile drawer */
+.shell__drawer-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 230;
+  background: var(--overlay);
+  display: flex;
+}
+.shell__drawer {
+  position: relative;
+  width: 264px;
+  max-width: 82vw;
+  height: 100%;
+  box-shadow: var(--shadow-3);
+}
+.shell__drawer .sidebar { width: 100%; border-right: none; }
+.shell__drawer-close {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  z-index: 2;
+}
+
+/* On tablet and below the inspector floats over content instead of taking a column. */
+@media (max-width: 1040px) {
+  .shell--inspector {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'topbar'
+      'main';
+  }
+  .inspector {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 220;
+    box-shadow: var(--shadow-3);
+  }
+}
+@media (max-width: 420px) {
+  .inspector { width: 100%; }
+}

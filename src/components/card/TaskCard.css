@@ -1,0 +1,153 @@
+.taskcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: var(--card-pad);
+  padding-left: calc(var(--card-pad) + 4px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+.taskcard:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-2);
+}
+
+.taskcard--selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-soft), var(--shadow-2);
+}
+
+.taskcard--dragging {
+  opacity: 0.4;
+}
+
+.taskcard--overlay {
+  box-shadow: var(--shadow-3);
+  border-color: var(--primary);
+  transform: rotate(1.5deg);
+  cursor: grabbing;
+}
+
+.taskcard--done .taskcard__title {
+  color: var(--text-muted);
+}
+
+/* Left priority accent */
+.taskcard__priority-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--card-priority, var(--primary));
+  opacity: 0.9;
+}
+
+.taskcard__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.taskcard__pri {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.taskcard__pri-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.taskcard__due {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-size: var(--font-meta);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.taskcard__due--overdue { color: var(--accent); }
+.taskcard__due--today { color: var(--p-high); }
+.taskcard__due--soon { color: var(--text-muted); }
+
+.taskcard__title {
+  font-size: var(--font-card-title);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.taskcard__desc {
+  font-size: var(--font-meta);
+  color: var(--text-muted);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Hide description entirely in compact density even if the field is on. */
+[data-density='compact'] .taskcard__desc { display: none; }
+
+.taskcard__progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.taskcard__progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-sunken);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.taskcard__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-strong));
+  border-radius: 999px;
+}
+.taskcard__progress-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.taskcard__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.taskcard__tag {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border-color: var(--border);
+  height: 20px;
+  font-size: 10.5px;
+}
+
+/* Compact density trims tags to a single row visually. */
+[data-density='compact'] .taskcard { gap: 6px; }

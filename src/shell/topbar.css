@@ -1,0 +1,94 @@
+.topbar {
+  grid-area: topbar;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 60px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+  z-index: 20;
+}
+
+.viewswitch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-sunken);
+  border-radius: var(--r-md);
+  flex: 0 0 auto;
+}
+.viewswitch__btn {
+  position: relative;
+  border-radius: calc(var(--r-md) - 3px);
+  padding: 0;
+  height: 32px;
+}
+.viewswitch__pill {
+  position: absolute;
+  inset: 0;
+  background: var(--surface);
+  border-radius: calc(var(--r-md) - 3px);
+  box-shadow: var(--shadow-1);
+}
+.viewswitch__inner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.viewswitch__btn--active .viewswitch__inner { color: var(--text); }
+.viewswitch__btn:hover:not(.viewswitch__btn--active) .viewswitch__inner { color: var(--text); }
+
+.topbar__title { font-size: 15px; font-weight: 700; flex: 1; }
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.topbar__cmd {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--control-h);
+  padding: 0 10px 0 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 550;
+  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.topbar__cmd:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.topbar__cmd kbd { font-size: 10.5px; }
+
+.topbar__new-label { display: inline; }
+
+@media (max-width: 1040px) {
+  .viewswitch__label { display: none; }
+  .viewswitch__inner { padding: 0 11px; }
+}
+@media (max-width: 860px) {
+  .topbar__cmd-label { display: none; }
+  .topbar__cmd kbd { display: none; }
+  .topbar__cmd { padding: 0; width: var(--control-h); justify-content: center; }
+}
+@media (max-width: 520px) {
+  .topbar__new-label { display: none; }
+  .topbar__new { width: var(--control-h); padding: 0; }
+}
+
+/* Focus mode hides the command hint chip to reduce clutter. */
+[data-mode='focus'] .topbar__cmd-label,
+[data-mode='focus'] .topbar__cmd kbd { display: none; }
+[data-mode='focus'] .topbar__cmd { padding: 0; width: var(--control-h); justify-content: center; }
