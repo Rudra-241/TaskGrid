@@ -1,0 +1,68 @@
+# Builds the desktop app on each OS and publishes the installers as a GitHub
+# Release. Runs when a version tag (v1.2.3) is pushed, or by hand.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: --win
+          - os: macos-latest
+            target: --mac
+          - os: ubuntu-latest
+            target: --linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run build:electron
+      - run: npx electron-builder ${{ matrix.target }} --publish never
+        env:
+          # No signing certificates: Windows builds are unsigned, macOS ad-hoc.
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.os }}
+          path: |
+            release/*.exe
+            release/*.dmg
+            release/*.zip
+            release/*.AppImage
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
+          body: |
+            TaskGrid desktop app with the Up next, Board glance, and In progress widgets.
+
+            **Windows:** `TaskGrid-Setup-<version>.exe` installs it; `TaskGrid-<version>-portable.exe` runs without installing. The builds are unsigned, so SmartScreen may warn: choose *More info → Run anyway*.
+
+            **macOS:** pick the `.dmg` for your Mac (`arm64` for Apple silicon, `x64` for Intel). The app is not notarized; if macOS says it is damaged or cannot be opened, run `xattr -cr /Applications/TaskGrid.app` once.
+
+            **Linux:** `chmod +x` the `.AppImage` and run it.

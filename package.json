@@ -1,7 +1,7 @@
 {
   "name": "hci_project",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "TaskGrid: an adaptive productivity workspace, with desktop widgets",
   "author": "Rudra Saxena",
   "type": "module",
@@ -15,7 +15,8 @@
     "desktop:dev": "node scripts/desktop-dev.mjs",
     "desktop": "npm run build && npm run build:electron && electron .",
     "dist:win": "npm run build && npm run build:electron && electron-builder --win",
-    "dist:mac": "npm run build && npm run build:electron && electron-builder --mac"
+    "dist:mac": "npm run build && npm run build:electron && electron-builder --mac",
+    "dist:linux": "npm run build && npm run build:electron && electron-builder --linux"
   },
   "dependencies": {
     "@dnd-kit/accessibility": "^3.1.1",
@@ -58,21 +59,49 @@
     "mac": {
       "category": "public.app-category.productivity",
       "target": [
-        "dmg",
-        "zip"
-      ]
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "identity": "-",
+      "hardenedRuntime": false
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "portable"
       ]
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     },
     "linux": {
-      "executableName": "taskgrid"
+      "executableName": "taskgrid",
+      "target": [
+        "AppImage"
+      ],
+      "category": "Office"
+    },
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rudra-241/TaskGrid.git"
   }
 }
